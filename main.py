@@ -1,5 +1,5 @@
 from database import run,get 
-from music_data import artists, albums, cross_table
+from music_data import artists, albums, songs,cross_table
 # CREATE TABLES 
 # Artists: id, name, descrip
 run (''' CREATE TABLE IF NOT EXISTS artists(
@@ -31,3 +31,16 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
     song_id INTEGER FOREIGN KEY songs(id),
     album_id INTEGER FOREIGN KEY albums(id)
     )''')
+
+#INSERT datas to databas
+#Artist 
+for artist in artists:
+ run ('INSERT INTO artists VAKUES (NULL, :name, :description)', artist)
+
+# albums 
+for album in albums:
+    run ('INSERT INTO albums VALUES (NULL,:al_title, : year_released, :genre)', album)
+
+#songs 
+for song in songs: 
+    run ('INSERT INTO songs VALUES (NULL, :) ')
