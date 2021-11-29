@@ -47,4 +47,4 @@ for song in songs:
 
 #cross table
 for data in cross_table:
-    run ('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )')
+    run ('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',data)
