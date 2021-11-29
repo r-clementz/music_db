@@ -1,7 +1,17 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify,render_template,request,redirect
 from database import run, get
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder = 'static', static_url_path="")
+
+#TOP PAGE
+@app.get("/")
+def index():
+    """
+    """
+    all_artists = get('SELECT * FROM aritst')
+    all_artists = [dict(artist) for artist in all_artists]
+    return jsonify(all_artists)
+    
 
 @app.get('/users')
 def get_users():
