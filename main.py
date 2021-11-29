@@ -28,8 +28,8 @@ run ('''CREATE TABLE IF NOT EXISTS songs (
 # ArtistXSongX Album: artist_id, song_id, album_id
 run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
     artist_id INTEGER FOREIGNKEY artists(id),
-    song_id INTEGER FOREIGN KEY songs(id),
-    album_id INTEGER FOREIGN KEY albums(id)
+    album_id INTEGER FOREIGN KEY albums(id),
+    song_id INTEGER FOREIGN KEY songs(id)
     )''')
 
 #INSERT datas to databas
@@ -43,4 +43,8 @@ for album in albums:
 
 #songs 
 for song in songs: 
-    run ('INSERT INTO songs VALUES (NULL, :) ')
+    run ('INSERT INTO songs VALUES (NULL, :s_title, :duration, :v_id)', song)
+
+#cross table
+for data in cross_table:
+    run ('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )')
