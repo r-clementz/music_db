@@ -48,3 +48,21 @@ for song in songs:
 #cross table
 for data in cross_table:
     run ('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',data)
+
+#Search Menu in Terminal 
+#Print our all artist name
+all_artist = get ('SELECT name FROM artists')
+#Print out oldest album
+oldest_albums = get ('SELECT al_name, MIN(year_released) FROM albums JOIN name ')
+#Uppdate albums without year_released with some year
+#Adding data: add an artist 
+#Adding data: add an album to artist
+#Adding data : add a song to album
+#Deliting data: delete an artist
+#Deliting data: delete an album
+#Deliting data: delete an album
+#Average duration of songs
+#Show the longest song from each album
+#Number of songs each artist has 
+#Search artist 
+#Search songs    
