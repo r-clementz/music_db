@@ -12,6 +12,7 @@ def run(query, values = {}):
 
 def get(query,values = {}):
     conn = sqlite3.connect(db_name)
+    conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     cur.execute(query,values)
     results = cur.fetchall()

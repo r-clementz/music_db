@@ -51,10 +51,15 @@ for data in cross_table:
 
 #Search Menu in Terminal 
 #Print our all artist name
-all_artist = get ('SELECT name FROM artists')
+allartist_names = get ('SELECT name FROM artists')
+print(allartist_names)
 #Print out oldest album
-oldest_albums = get ('SELECT al_name, MIN(year_released) FROM albums JOIN name ')
+oldest_albums = get ('''SELECT al_name 
+                        FROM albums
+                        WHERE (SELECT MIN(year_released) FROM albums)''')
+print(oldest_albums)
 #Uppdate albums without year_released with some year
+
 #Adding data: add an artist 
 #Adding data: add an album to artist
 #Adding data : add a song to album
