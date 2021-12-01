@@ -3,14 +3,14 @@ from music_data import artists, albums, songs,cross_table
 # CREATE TABLES 
 # Artists: id, name, descrip
 run (''' CREATE TABLE IF NOT EXISTS artists(
-    id INTEGER PRIMARY KEY AUTOINCEREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name STRING NOT NULL,
     description STRING NOT NULL    
     ) ''')
 
 # Albums : id, name, discrip, genre
 run ('''CREATE TABLE IF NOT EXISTS albums(
-    id INTEGER PRIMARY KEY AUTOINCEREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     al_title STRING NOT NULL,
     al_description STRING NOT NULL,
     year_released INTEGER NOT NULL, 
@@ -19,7 +19,7 @@ run ('''CREATE TABLE IF NOT EXISTS albums(
 
 # Songs: id, name, durations, URL 
 run ('''CREATE TABLE IF NOT EXISTS songs (
-    id INTEGER PRIMARY KEY AUTOINCEREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     s_title STRING NOT NULL,
     duration STRING NOT NULL,
     v_id STRING   
@@ -27,9 +27,12 @@ run ('''CREATE TABLE IF NOT EXISTS songs (
 
 # ArtistXSongX Album: artist_id, song_id, album_id
 run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
-    artist_id INTEGER FOREIGNKEY artists(id),
-    album_id INTEGER FOREIGN KEY albums(id),
-    song_id INTEGER FOREIGN KEY songs(id)
+    artist_id INTEGER,
+    FOREIGNKEY (aritist_id ) REFERENCES artists (id),
+    album_id INTEGER,
+    FOREIGNKEY (album_id) REFERENCES albums (id),
+    song_id INTEGER, 
+    FOREIGNKEY (song_id) REFERENCES songs (id)
     )''')
 
 #INSERT datas to databas
@@ -51,16 +54,17 @@ for data in cross_table:
 
 #Search Menu in Terminal 
 #Print our all artist name
-allartist_names = get ('SELECT name FROM artists')
-print(allartist_names)
-#Print out oldest album
-oldest_albums = get ('''SELECT al_name 
-                        FROM albums
-                        WHERE (SELECT MIN(year_released) FROM albums)''')
-print(oldest_albums)
-#Uppdate albums without year_released with some year
+# allartist_names = get ('SELECT name FROM artists')
+# print(allartist_names)
+# #Print out oldest album
+# oldest_albums = get ('''SELECT al_name 
+#                         FROM albums
+#                         WHERE (SELECT MIN(year_released) FROM albums)''')
+# print(oldest_albums)
+# #Uppdate albums without year_released with some year
 
 #Adding data: add an artist 
+
 #Adding data: add an album to artist
 #Adding data : add a song to album
 #Deliting data: delete an artist
