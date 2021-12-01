@@ -179,7 +179,8 @@ for song in original_songs:
 cross_table = []
 #Making data for aritst X album X song cross table with for loop  
 
-for i in range(1,37):
+for data in cross_table:
+    i = 1
     if i in range (1,13): 
         cross_info  = {
         'artist_id' : 1,
@@ -187,6 +188,7 @@ for i in range(1,37):
         'song_id': i
        }
         cross_table.append(cross_info)
+    
     elif i in range(13,25):
         cross_info  = {
         'artist_id' : 1,
@@ -194,6 +196,7 @@ for i in range(1,37):
         'song_id': i
        }
         cross_table.append(cross_info)
+   
     elif i in range (25,38):
         cross_info  = {
         'artist_id' : 1,
@@ -201,17 +204,15 @@ for i in range(1,37):
         'song_id': i
        }
         cross_table.append(cross_info)
-
-
-
-for i in range(37,89):
-    if i in range(37,53):
+   
+    elif i in range(37,53):
         cross_info  = {
         'artist_id' : 2,
         'album_id': 4, 
         'song_id': i
        }
         cross_table.append(cross_info)
+    
     elif i in range(53,68):
         cross_info  = {
         'artist_id' : 2,
@@ -219,6 +220,7 @@ for i in range(37,89):
         'song_id': i
        }
         cross_table.append(cross_info)
+    
     elif i in range (68,89):
         cross_info  = {
         'artist_id' : 2,
@@ -226,11 +228,8 @@ for i in range(37,89):
         'song_id': i
        }
         cross_table.append(cross_info)
- 
 
-artist3 = []
-for i in range(89,109):
-    if i in range(89,95):
+    elif i in range(89,95):
         cross_info  = {
         'artist_id' : 3,
         'album_id': 7, 

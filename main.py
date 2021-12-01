@@ -34,6 +34,7 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
     FOREIGN KEY (album_id) REFERENCES albums (id),
     FOREIGN KEY (song_id) REFERENCES songs (id)
     )''')
+    
 
 #INSERT datas to databas
 #Artist 
