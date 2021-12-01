@@ -13,7 +13,7 @@ run ('''CREATE TABLE IF NOT EXISTS albums(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     al_title STRING NOT NULL,
     al_description STRING NOT NULL,
-    year_released INTEGER NOT NULL, 
+    year_released INTEGER, 
     genre STRING 
     ) ''')
 
@@ -28,31 +28,31 @@ run ('''CREATE TABLE IF NOT EXISTS songs (
 # ArtistXSongX Album: artist_id, song_id, album_id
 run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
     artist_id INTEGER,
-    FOREIGNKEY (aritist_id ) REFERENCES artists (id),
     album_id INTEGER,
-    FOREIGNKEY (album_id) REFERENCES albums (id),
     song_id INTEGER, 
-    FOREIGNKEY (song_id) REFERENCES songs (id)
+    FOREIGN KEY (artist_id) REFERENCES artists (id),
+    FOREIGN KEY (album_id) REFERENCES albums (id),
+    FOREIGN KEY (song_id) REFERENCES songs (id)
     )''')
 
 #INSERT datas to databas
 #Artist 
-for artist in artists:
- run ('INSERT INTO artists VAKUES (NULL, :name, :description)', artist)
+# for artist in artists:
+#  run ('INSERT INTO artists VALUES (NULL, :name, :description)', artists)
 
-# albums 
-for album in albums:
-    run ('INSERT INTO albums VALUES (NULL,:al_title, : year_released, :genre)', album)
+# Albums 
+# for album in albums:
+#     run ('INSERT INTO albums VALUES (NULL, :al_title, :al_description, :year_released, :genre)', albums)
 
 #songs 
-for song in songs: 
-    run ('INSERT INTO songs VALUES (NULL, :s_title, :duration, :v_id)', song)
+# for song in songs: 
+#     run ('INSERT INTO songs VALUES (NULL, :s_title, :duration, :v_id)', songs)
 
 #cross table
-for data in cross_table:
-    run ('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',data)
+# for data in cross_table:
+#     run ('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_table)
 
-#Search Menu in Terminal 
+# Search Menu in Terminal 
 #Print our all artist name
 # allartist_names = get ('SELECT name FROM artists')
 # print(allartist_names)
