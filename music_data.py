@@ -252,4 +252,4 @@ for i in range(89,109):
        }
         cross_table.append(cross_info)
 
-print (str(cross_table))
+
