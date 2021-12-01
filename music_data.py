@@ -179,7 +179,7 @@ for song in original_songs:
 cross_table = []
 #Making data for aritst X album X song cross table with for loop  
 
-for data in cross_table:
+for song in songs:
     i = 1
     if i in range (1,13): 
         cross_info  = {
