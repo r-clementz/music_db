@@ -5,6 +5,14 @@ db_name = "music.db"
 def run(query, values = {}): 
     conn = sqlite3.connect(db_name)
     cur = conn.cursor()
+    result = cur.execute(query,values) 
+    conn.commit()
+    conn.close()
+    return result.lastrowid 
+
+def run_many(query,values = {}):
+    conn = sqlite3.connect(db_name)
+    cur = conn.cursor()
     result = cur.executemany(query,values) 
     conn.commit()
     conn.close()
