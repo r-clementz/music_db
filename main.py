@@ -54,13 +54,16 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
 #     run_many('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_table)
 
 # Search Menu in Terminal 
+
 #Print our all artist name
-# allartist_names = get ('SELECT name FROM artists')
-# print(allartist_names)
-# #Print out oldest album
-# oldest_albums = get ('''SELECT al_name 
-#                         FROM albums
-#                         WHERE (SELECT MIN(year_released) FROM albums)''')
+allartist_names = get ('SELECT name FROM artists')
+print(allartist_names)
+
+#Print out oldest album
+oldest_albums = get ('''SELECT al_title, year_released
+                        FROM albums 
+                        WHERE year_released = (SELECT MIN(year_released) FROM albums) 
+                    ''')
 # print(oldest_albums)
 # #Uppdate albums without year_released with some year
 
