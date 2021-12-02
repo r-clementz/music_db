@@ -1,4 +1,4 @@
-from database import run,get 
+from database import run,get,run_many
 from music_data import artists, albums, songs,cross_table
 # CREATE TABLES 
 # Artists: id, name, descrip
@@ -34,7 +34,7 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
     FOREIGN KEY (album_id) REFERENCES albums (id),
     FOREIGN KEY (song_id) REFERENCES songs (id)
     )''')
-    
+
 
 #INSERT datas to databas
 #Artist 
@@ -51,7 +51,7 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
 
 #cross table
 # for data in cross_table:
-#     run ('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_table)
+#     run_many('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_table)
 
 # Search Menu in Terminal 
 #Print our all artist name
