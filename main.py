@@ -64,10 +64,25 @@ oldest_albums = get ('''SELECT al_title, year_released
                         FROM albums 
                         WHERE year_released = (SELECT MIN(year_released) FROM albums) 
                     ''')
-# print(oldest_albums)
-# #Uppdate albums without year_released with some year
+print (oldest_albums)   
 
-#Adding data: add an artist 
+#Uppdate albums without year_released with some year
+#get albums has no year_released
+albums_w_no_date = get ('''SELECT al_title, year_released 
+                            FROM albums 
+                            WHERE  year_released is NULL
+                        ''')
+#Show the album without released year and make user choose??                        
+#adding data to NULL year_released
+updated_year = input (int('Add released year:'))
+run ('''UPDATE albums
+        SET year_released = :year_released
+        WHERE year_released is NULL''',
+        {'year_rekeased':f'%{updated_year}%'}
+    )
+                        
+#Adding data: add an artist
+new_artist = input('')
 
 #Adding data: add an album to artist
 #Adding data : add a song to album
