@@ -175,13 +175,12 @@ for song in original_songs:
         'v_id' : song['v_id']}
     songs.append(converted_song)    
         
+        
 #cross table data
 cross_table = []
 #Making data for aritst X album X song cross table with for loop  
-
-for song in songs:
-    i = 1
-    if i in range (1,13): 
+for i in range (len(songs)+1):
+    if i >=1 and i<=12: 
         cross_info  = {
         'artist_id' : 1,
         'album_id': 1, 
@@ -189,7 +188,7 @@ for song in songs:
        }
         cross_table.append(cross_info)
     
-    elif i in range(13,25):
+    elif i >=13 and i <=24:
         cross_info  = {
         'artist_id' : 1,
         'album_id': 2, 
@@ -197,7 +196,7 @@ for song in songs:
        }
         cross_table.append(cross_info)
    
-    elif i in range (25,38):
+    elif i >= 25 and i <= 36:
         cross_info  = {
         'artist_id' : 1,
         'album_id': 3, 
@@ -205,7 +204,7 @@ for song in songs:
        }
         cross_table.append(cross_info)
    
-    elif i in range(37,53):
+    elif i >=37 and i <= 52:
         cross_info  = {
         'artist_id' : 2,
         'album_id': 4, 
@@ -213,7 +212,7 @@ for song in songs:
        }
         cross_table.append(cross_info)
     
-    elif i in range(53,68):
+    elif i >= 53 and i <= 67:
         cross_info  = {
         'artist_id' : 2,
         'album_id': 5, 
@@ -221,7 +220,7 @@ for song in songs:
        }
         cross_table.append(cross_info)
     
-    elif i in range (68,89):
+    elif i >= 68  and i <= 88:
         cross_info  = {
         'artist_id' : 2,
         'album_id': 6, 
@@ -229,21 +228,21 @@ for song in songs:
        }
         cross_table.append(cross_info)
 
-    elif i in range(89,95):
+    elif i >= 89 and i <= 94:
         cross_info  = {
         'artist_id' : 3,
         'album_id': 7, 
         'song_id': i
        }
         cross_table.append(cross_info)
-    elif i in range(95,103):
+    elif i >= 95 and i <= 102:
         cross_info  = {
         'artist_id' : 3,
         'album_id': 8, 
         'song_id': i
        }
         cross_table.append(cross_info)
-    elif i in range (103,109):
+    elif i >= 103 and i <= 108:
         cross_info  = {
         'artist_id' : 3,
         'album_id': 9, 
