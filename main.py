@@ -82,7 +82,13 @@ run ('''UPDATE albums
     )
                         
 #Adding data: add an artist
-new_artist = input('')
+new_name = input('Please input new artist name: ')
+new_description = input('Please input description for the artist')
+
+new_artist = {'name': new_name,
+            'description': new_description}
+
+run ('INSERT INTO artists VALUES(NULL, :name, :desription)', new_artist )
 
 #Adding data: add an album to artist
 #Adding data : add a song to album
