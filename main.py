@@ -109,23 +109,53 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
 #average_duration = run('SELECT ROUND(AVG(duration),2) AS Average_duration FROM songs')
 
 #Average duration of each album
+##get album name and id to check the duration
+
 '''SELECT ROUND (AVG(duration),2)
 FROM(SELECT * 
 FROM songs 
 JOIN artistsXsongsXalbums as cross
 ON song_id
 WHERE cross.song_id = songs.id and cross.album_id = 1)'''
+
 #Show the longest song from each album
+'''SELECT s_title, MAX(duration)
+FROM(SELECT * 
+FROM songs 
+JOIN artistsXsongsXalbums as cross
+ON song_id
+WHERE cross.song_id = songs.id and cross.album_id = 1)
+'''
+#Number of songs each albums has
+'''SELECT COUNT(album_id)
+FROM(SELECT * 
+FROM songs 
+JOIN artistsXsongsXalbums as cross
+ON song_id
+WHERE cross.song_id = songs.id and cross.album_id = 1)'''
 
 #Number of songs each artist has 
+#get artist name and id 
+'''SELECT COUNT(song_id)
+FROM(SELECT * 
+FROM artistsXsongsXalbums as cross
+JOIN artists
+ON id
+WHERE cross.artist_id = artists.id and cross.artist_id = 1)'''
+
 #Search artist 
-# search_name = input()
-#run ('SELECT name FROM artist WHERE name LIKE :search_name', {'name':f'%{search_name}}%')
+'''
+search_name = input()
+get('SELECT name FROM artist WHERE name LIKE :search_name', {'name':f'%{search_name}}%')
+'''
+
 #Search songs 
-# search_song = input() 
-#run ('SELECT s_title FROM songs WHERE s_title LIKE :search_name', {'name':f'%{search_name}}%')
-#Search songs
+'''search_song = input() 
+get('SELECT s_title FROM songs WHERE s_title LIKE :search_name', {'name':f'%{search_name}}%')
+'''
+
 # Showing artist details together with all albums from that artist 
+
 #Showing album details together with songs in that album 
 #The list of total number of songs in the album and total playing time 
 
