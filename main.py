@@ -111,6 +111,7 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
 #Average duration of each album
 ##get album name and id to check the duration
 
+
 '''SELECT ROUND (AVG(duration),2)
 FROM(SELECT * 
 FROM songs 
@@ -136,6 +137,14 @@ WHERE cross.song_id = songs.id and cross.album_id = 1)'''
 
 #Number of songs each artist has 
 #get artist name and id 
+artist_id = get('''SELECT artist_id 
+FROM artistsXsongsXalbums
+JOIN artists
+ON id 
+WHERE artist_id = artists.id 
+AND artists.name LIKE '%:search_artist%'
+GROUP BY artist_id''',f'%{search_artist}%')
+
 '''SELECT COUNT(song_id)
 FROM(SELECT * 
 FROM artistsXsongsXalbums as cross
@@ -154,7 +163,36 @@ get('SELECT name FROM artist WHERE name LIKE :search_name', {'name':f'%{search_n
 get('SELECT s_title FROM songs WHERE s_title LIKE :search_name', {'name':f'%{search_name}}%')
 '''
 
+#all albums of artist
+'''SELECT al_title
+FROM albums
+JOIN artistsXsongsXalbums as cross
+ON album_id
+WHERE cross.album_id = albums.id
+AND cross.artist_id = 1
+GROUP BY al_title'''
 # Showing artist details together with all albums from that artist 
+'''
+SELECT al_title, ar.description, ar.name
+FROM albums, artists AS ar 
+JOIN artistsXsongsXalbums as cross
+ON album_id
+WHERE cross.album_id = albums.id
+AND cross.artist_id = 1
+GROUP BY al_title
+'''
+
+#Showing album detail and albums 
+'''
+SELECT al_title, al_description, name
+FROM albums, artists 
+JOIN artistsXsongsXalbums as cross
+ON album_id
+WHERE cross.album_id = albums.id
+AND cross.artist_id = 1
+GROUP BY al_title
+'''
+
 
 #Showing album details together with songs in that album 
 #The list of total number of songs in the album and total playing time 
