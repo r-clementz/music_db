@@ -137,6 +137,7 @@ WHERE cross.song_id = songs.id and cross.album_id = 1)'''
 
 #Number of songs each artist has 
 #get artist name and id 
+search_artist = input('Artist name: ')
 artist_id = get('''SELECT artist_id 
 FROM artistsXsongsXalbums
 JOIN artists
@@ -195,6 +196,19 @@ GROUP BY al_title
 
 
 #Showing album details together with songs in that album 
+search_album = input('')
+songs_w_al_details = get('''SELECT s_title,al_title,al_description
+FROM songs,albums
+JOIN artistsXsongsXalbums AS cross
+ON cross.album_id = albums.id 
+AND cross.song_id = songs.id
+WHERE cross.artist_id = 
+(SELECT artist_id 
+ FROM  artistsXsongsXalbums
+ JOIN artists
+ ON id 
+ WHERE cross.artist_id = artists.id 
+ AND artists.name LIKE "%:search_artist%" ''',f'%{search_album}%')
 #The list of total number of songs in the album and total playing time 
 
 #Gör så att alla listor går att sortera på olika egenskaper, som name, year_released eller duration 
