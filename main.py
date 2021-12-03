@@ -209,6 +209,21 @@ WHERE cross.artist_id =
  ON id 
  WHERE cross.artist_id = artists.id 
  AND artists.name LIKE "%:search_artist%" ''',f'%{search_album}%')
+
 #The list of total number of songs in the album and total playing time 
+search_album = input('')
+total_songs_duration = get('''SELECT al_title, 
+COUNT(song_id) AS total_songs,
+SUM(duration) AS total_length
+FROM songs, albums
+JOIN artistsXsongsXalbums as cross
+ON song_id = songs.id
+WHERE cross.album_id = albums.id 
+AND cross.song_id = songs.id
+AND cross.album_id = (SELECT id 
+                      FROM albums 
+                      WHERE albums.al_title LIKE '%:search_album%') ''' ,
+f'%{search_album}%' )
+
 
 #Gör så att alla listor går att sortera på olika egenskaper, som name, year_released eller duration 
