@@ -65,7 +65,7 @@ original_songs =[{'s_title':'Lift Off/ Mic Check','duration':'3:57','v_id':'LCK1
 {'s_title':'Black Radio','duration':'5:25','v_id':'IcIuGl1_3w8'},
 {'s_title':'Letter To Hermione','duration':'4:51','v_id':'Yc0TmmmMlZs'},
 {'s_title':'Smell Like Teen Spirit','duration':'7:24','v_id':'onXoreYFMhU'},
-{'s_title':'This IS Not Fear','duration':'3:18','v_id':'HYSG3ieNIBg'},
+{'s_title':'This Is Not Fear','duration':'3:18','v_id':'HYSG3ieNIBg'},
 {'s_title':'Thinkin Bout You','duration':'3:12','v_id':'d0WqdC0MUBU'},
 {'s_title':'Day To Day','duration':'5:24','v_id':'1ljpTI6lJTA'},
 {'s_title':'No One Like You','duration':'9:18','v_id':'z0yKuHIutLQ'},

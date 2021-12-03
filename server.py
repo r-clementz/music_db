@@ -29,15 +29,11 @@ def get_user_by_id(id):
 all_artist = get ('SELECT name FROM artists')
 #Print out oldest album
 oldest_albums = get ('SELECT al_name, MIN(year_released) FROM albums JOIN name ')
-#Uppdate albums without year_released with some year
-#Adding data: add an artist 
-#Adding data: add an album to artist
-#Adding data : add a song to album
-#Deliting data: delete an artist
-#Deliting data: delete an album
-#Deliting data: delete an album
-#Average duration of songs
-#Show the longest song from each album
-#Number of songs each artist has 
-#Search artist 
-#Search songs 
+# Lista ut alla artister i en template. Visa namn och bild
+# Skapa en detaljsida för en artist, som innehåller name, description, bild och en lista på albums. När man klickar på en artist från listan i nr 18 går man till detaljsidan
+# Albums på detaljsidan för en artist ska visa titel, bild, antal låtar och total duration
+# Skapa en detaljsida för ett album, som innehåller title, description, bild, antal låtar, total duration och en lista på låtar
+# Låtarna på detaljsidan för ett album ska visa index, name och duration
+# Lägg till input för att kunna söka på artister, album och låtar. Klickar man på något i resultatlistan ska samma hända som tidigare: artist och album går till detaljsidan, en låt spelar den i en player
+# När man klickar på en låt ska låten spelas i en YouTube player på sidan
+# Skapa formulär för att kunna lägga till artister, album och låtar

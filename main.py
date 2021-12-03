@@ -51,52 +51,82 @@ run ('''CREATE TABLE IF NOT EXISTS artistsXsongsXalbums (
 
 #cross table
 # for data in cross_table:
-#     run_many('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_table)
+# run_many('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_table)
 
 # Search Menu in Terminal 
 
 #Print our all artist name
-allartist_names = get ('SELECT name FROM artists')
-print(allartist_names)
+# allartist_names = get ('SELECT name FROM artists')
+# print(allartist_names)
 
 #Print out oldest album
-oldest_albums = get ('''SELECT al_title, year_released
-                        FROM albums 
-                        WHERE year_released = (SELECT MIN(year_released) FROM albums) 
-                    ''')
-print (oldest_albums)   
+# oldest_albums = get ('''SELECT al_title, year_released
+#                         FROM albums 
+#                         WHERE year_released = (SELECT MIN(year_released) FROM albums) 
+#                     ''')
+#print (oldest_albums)   
 
 #Uppdate albums without year_released with some year
 #get albums has no year_released
-albums_w_no_date = get ('''SELECT al_title, year_released 
-                            FROM albums 
-                            WHERE  year_released is NULL
-                        ''')
-#Show the album without released year and make user choose??                        
-#adding data to NULL year_released
-updated_year = input (int('Add released year:'))
-run ('''UPDATE albums
-        SET year_released = :year_released
-        WHERE year_released is NULL''',
-        {'year_rekeased':f'%{updated_year}%'}
-    )
+# albums_w_no_date = get ('''SELECT al_title, year_released 
+#                             FROM albums 
+#                             WHERE  year_released is NULL
+#                         ''')
+# #Show the album without released year and make user choose??                        
+# #adding data to NULL year_released
+# updated_year = input (int('Add released year:'))
+# run ('''UPDATE albums
+#         SET year_released = :year_released
+#         WHERE year_released is NULL''',
+#         {'year_rekeased':f'%{updated_year}%'}
+#     )
                         
 #Adding data: add an artist
-new_name = input('Please input new artist name: ')
-new_description = input('Please input description for the artist')
+# new_name = input('Please input new artist name: ')
+# new_description = input('Please input description for the artist')
 
-new_artist = {'name': new_name,
-            'description': new_description}
+# new_artist = {'name': new_name,
+#             'description': new_description}
 
-run ('INSERT INTO artists VALUES(NULL, :name, :desription)', new_artist )
+# run ('INSERT INTO artists VALUES(NULL, :name, :desription)', new_artist )
 
 #Adding data: add an album to artist
+# picked_artist = get 
 #Adding data : add a song to album
 #Deliting data: delete an artist
+# deliting_artist = input()
+# run('''DELETE FROM artists WHERE name LIKE '%:name%' ''', {'name:': f'%{deliting_artist}%'})
+
 #Deliting data: delete an album
-#Deliting data: delete an album
-#Average duration of songs
+# deliting_album = input()
+# run('''DELETE FROM albums WHERE name LIKE '%:al_title%' ''', {'al_title:': f'%{deliting_artist}%'})
+
+#Deliting data : song
+# deliting_song = input()
+#run('''DELETE FROM albums WHERE name LIKE '%:s_title%' ''', {'s_title:': f'%{deliting_song}%'})
+
+#Average duration of all songs
+#average_duration = run('SELECT ROUND(AVG(duration),2) AS Average_duration FROM songs')
+
+#Average duration of each album
+'''SELECT ROUND (AVG(duration),2)
+FROM(SELECT * 
+FROM songs 
+JOIN artistsXsongsXalbums as cross
+ON song_id
+WHERE cross.song_id = songs.id and cross.album_id = 1)'''
 #Show the longest song from each album
+
 #Number of songs each artist has 
 #Search artist 
-#Search songs    
+# search_name = input()
+#run ('SELECT name FROM artist WHERE name LIKE :search_name', {'name':f'%{search_name}}%')
+#Search songs 
+# search_song = input() 
+#run ('SELECT s_title FROM songs WHERE s_title LIKE :search_name', {'name':f'%{search_name}}%')
+#Search songs
+# Showing artist details together with all albums from that artist 
+#Showing album details together with songs in that album 
+#The list of total number of songs in the album and total playing time 
+
+#Gör så att alla listor går att sortera på olika egenskaper, som name, year_released eller duration 
