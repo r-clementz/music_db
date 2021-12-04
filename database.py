@@ -26,3 +26,11 @@ def get(query,values = {}):
     results = cur.fetchall()
     conn.close()
     return results 
+
+def runs(query,value): 
+    conn = sqlite3.connect(db_name)
+    cur = conn.cursor()
+    result = cur.execute(query,value) 
+    conn.commit()
+    conn.close()
+    return result.lastrowid 
