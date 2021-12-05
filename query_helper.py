@@ -16,7 +16,7 @@ def create_albums_table():
             year_released INTEGER, 
             genre STRING ) ''')
 
-def create_albums_table():
+def create_songs_table():
     run ('''CREATE TABLE IF NOT EXISTS songs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             s_title STRING NOT NULL,
