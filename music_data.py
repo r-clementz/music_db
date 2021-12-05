@@ -165,10 +165,19 @@ original_songs =[{'s_title':'Lift Off/ Mic Check','duration':'3:57','v_id':'LCK1
 #     songs_json = song_file.read()
 #     imported_songs = json.loads(songs_json)
 
-for song in original_songs:
-    duration = song['duration']
+def duration_converter(duration):
+    '''
+        Help function to convert song duration
+        from mm:ss format to seconds.
+        :param duration('mm:ss') String 
+    '''
     m,s = duration.split(':')
     converted_duration = int(m)*60 + int(s)
+    return converted_duration
+
+for song in original_songs:
+    duration = song['duration']  
+    converted_duration = duration_converter(duration)
     converted_song ={
         's_title':song['s_title'],
         'duration':converted_duration, 
