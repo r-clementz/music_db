@@ -28,9 +28,12 @@ def create_cross_table():
             artist_id INTEGER,
             album_id INTEGER,
             song_id INTEGER, 
-            FOREIGN KEY (artist_id) REFERENCES artists (id),
-            FOREIGN KEY (album_id) REFERENCES albums (id),
+            FOREIGN KEY (artist_id) REFERENCES artists (id)
+            ON DELETE CASCADE,
+            FOREIGN KEY (album_id) REFERENCES albums (id)
+            ON DELETE CASCADE,
             FOREIGN KEY (song_id) REFERENCES songs (id)
+            ON DELETE CASCADE
             )''')
 
 
