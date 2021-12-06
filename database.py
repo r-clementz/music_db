@@ -27,7 +27,7 @@ def get(query,values = {}):
     conn.close()
     return results 
 
-def runs(query,value): 
+def get_id(query,value): 
     conn = sqlite3.connect(db_name)
     cur = conn.cursor()
     result = cur.execute(query,value) 

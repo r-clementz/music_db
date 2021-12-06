@@ -1,12 +1,12 @@
 from os import get_exec_path
-from database import run, get, run_many,runs
+from database import run, get, run_many,get_id
 from music_data import *
 
 def create_artists_table():
     run (''' CREATE TABLE IF NOT EXISTS artists(
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              name STRING NOT NULL,
-             description STRING NOT NULL) ''')
+             description STRING ) ''')
 
 def create_albums_table():
     run ('''CREATE TABLE IF NOT EXISTS albums(
@@ -66,17 +66,18 @@ for song in songs:
 def add_artist():
     name = input('Artist Name:')
     description = input ('Artist Description: ')
-    artist_id =(run ('INSERT INTO artists VALUES (NULL, ?, ?)', (name,description)))
-    print('The artist added to artists table' )
+    artist_id = (run('INSERT INTO artists VALUES (NULL, ?, ?)',(name, description)))
     new_artist = {
         'id' : artist_id,
-        'name': name,
-        'description': description
+        'name': f'%{name}%',
+        'description': f'%{description}%'
     }
     print(artist_id)
     run('INSERT INTO artistsXsongsXalbums (artist_id) VALUES (:id)', new_artist)
     print ('artist_id was created in cross table')
-    
+
+        
+
 def get_artist_id(artist):
     '''
         Help function to get id from artists table
@@ -84,11 +85,17 @@ def get_artist_id(artist):
         Search id by name which user input. 
         :param artist String 
     '''
-    try: #check if the artist is already in data 
-        artist_id = get ('SELECT id FROM artist WHERE name LIKE ?', (artist))
+    try: #check if the artist is already in data  
+        row_id = get("SELECT id FROM artists WHERE name = :search_name ", {'search_name': f'{artist}'})
+        id_dict =[dict(row_data) for row_data in row_id ]
+        json_id =json.dumps(id_dict)
+        print(json_id)#
+        py_id = json.loads(json_id)
+        artist_id = py_id[0]["id"]      
+        print(artist_id)#
         return artist_id
     except: # if not, insert the artist to artists table and get id 
-        artist_id = run ('INSERT INTO aritst (name) VALUES (?)', (artist))
+        artist_id = run('INSERT INTO artists (name) VALUES (:name)',{'name':f'{artist}'})
         return artist_id
 
 # Albums 
