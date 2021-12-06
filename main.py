@@ -20,17 +20,7 @@ create_cross_table()
 # for cross_info in cross_table:
 #    run('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_info) 
 
-#add_artist()
 
-# dictify = [dict(row) for row in lists_from_sqlite]
-# json.dumps(dictionary, indent=2)
-# import json
-# ids = [{'id':None,
-#         'name':''}]
-# [for row in dict((get('''SELECT id, name FROM artists''')))]
-# jsonised=json.dumps(ids)
-# print(jsonised)
-# jsonised['1'] 
 '''
 artist = input('Artist: ')
 row_id = get("SELECT id FROM artists WHERE name = :search_name ", {'search_name': f'{artist}'})
@@ -41,4 +31,4 @@ py_id = json.loads(json_id)
 artist_id = py_id[0]["id"]      
 print(artist_id)
 '''
-get_artist_id('MF DOOM')
+add_album()

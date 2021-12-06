@@ -86,16 +86,16 @@ def get_artist_id(artist):
         :param artist String 
     '''
     try: #check if the artist is already in data  
-        row_id = get("SELECT id FROM artists WHERE name = :search_name ", {'search_name': f'{artist}'})
+        row_id = get("SELECT id FROM artists WHERE name LIKE :search_name ", {'search_name': f'{artist}'})
         id_dict =[dict(row_data) for row_data in row_id ]
         json_id =json.dumps(id_dict)
-        print(json_id)#
         py_id = json.loads(json_id)
         artist_id = py_id[0]["id"]      
-        print(artist_id)#
+        #print(artist_id)
         return artist_id
     except: # if not, insert the artist to artists table and get id 
         artist_id = run('INSERT INTO artists (name) VALUES (:name)',{'name':f'{artist}'})
+        print(artist," didn't exist in the database and added as new artist")
         return artist_id
 
 # Albums 
@@ -109,17 +109,17 @@ def add_album ():
                  'al_title' : title,
                  'al_description' : description,
                  'year_released' : year_released,
-                 'genre' : genre
-        }
-    album_id = (run ('''INSERT INTO albums 
-                        VALUES (:al_title, :al_description, :year_released, :genre)''', 
-                        new_album))                        
+                 'genre' : genre}
+
+    album_id = run('''INSERT INTO albums 
+                        VALUES (NULL, :al_title, :al_description, :year_released, :genre)''', 
+                        new_album)                        
     print ('The album added to albums table','\nalbum_id: ',album_id )
     #Get artist id 
     cross_data = {'artist_id': get_artist_id(artist),
                   'album_id' : album_id}       
 
-    run('INSERT INTO  artistsXsongsXalbums (artist_id, album_id) VALUES (:aritist, :id)', cross_data)
+    run('INSERT INTO  artistsXsongsXalbums (artist_id, album_id) VALUES (:artist_id, :album_id)', cross_data)
     print("Album's information added to cross table")
 
 def get_album_id(album):
