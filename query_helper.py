@@ -250,7 +250,6 @@ def update_released_year():#
         woy_album_dict = [dict(album) for album in row_albums_wo_year ]
         jsonised_albums = json.dumps(woy_album_dict)
         albums_wo_year = json.loads(jsonised_albums)
-        print(albums_wo_year)
         for album in albums_wo_year:
             print(f"id {album['id']} : {album['al_title']}")
     except: 
@@ -314,34 +313,40 @@ def delete_song():#
          print(deliting_song['s_title']," doesn't exist in the database")    
 
     
-def get_average_duration_of_songs():
+def get_average_duration_of_songs():#
     '''
         Get and print the average duration of all songs
     '''
-    average_duration = get('SELECT ROUND(AVG(duration),2) AS Average_duration FROM songs')
-    print(average_duration)
+    row_average = get('SELECT ROUND(AVG(duration),2) AS average_duration FROM songs')
+    average_dict = [dict(average) for average in row_average]
+    json_average = json.dumps(average_dict)
+    average_duration = json.loads (json_average)
+    print(f"Average duration for all songs in this database: {average_duration[0]['average_duration']}")
 
 #Average duration of each album
 ##get album name and id to check the duration
 
-def get_average_duration_in_album():
+def get_average_song_duration_in_album():
     '''
         Get and print the average duration of songs
         in an album chosen by user  
     '''
     try:
         album = input('Album Title: ')
-        album_id = get_album_id(album)
-        average_duration= get('''SELECT ROUND (AVG(duration),2)
+        album_id = {"id": get_album_id(album)}
+        row_average= get('''SELECT ROUND (AVG(duration),2) AS avg_of_song_duration
                                  FROM (SELECT * 
                                     FROM songs 
                                     JOIN artistsXsongsXalbums as cross
                                     ON cross.song_id = songs.id 
-                                    WHERE cross.album_id = :album_id )''',
-                                {'album_id': f'%{album_id}%'})
-        print(average_duration) 
+                                    WHERE cross.album_id = :id )''', album_id)
+        average_dict =[dict(average) for average in row_average]
+        json_average= json.dumps(average_dict)
+        average_duration = json.loads(json_average)
+        print(f"""The average song duration in this album : 
+                {average_duration[0]['avg_of_song_duration']}""")
     except:  
-         print(album," doesn't exist in the database")                
+         print("Couldn't get any data.")                
 
 def get_longest_song_in_album():
     '''
@@ -349,16 +354,21 @@ def get_longest_song_in_album():
         chosesen by user
     '''
     try:
-        album = input('Album Title: ')
-        album_id = get_album_id(album)
-        longest_song = get ('''SELECT s_title, MAX(duration)
+        album = {"al_title" : input('Album Title: ')}
+        album_id = {"id": get_album_id(album)}
+        row_longest = get ('''SELECT s_title, MAX(duration)
                           FROM(SELECT * 
                                FROM songs 
                                JOIN artistsXsongsXalbums as cross
                                ON cross.song_id = songs.id
-                               WHERE cross.album_id = :album_id )''',
-                        {'album_id': f'%{album_id}%'} )
-        print (longest_song)                          
+                               WHERE cross.album_id = :id )''', album_id)
+        longest_dict =[dict(song) for song in row_longest]
+        json_longest= json.dumps(longest_dict)
+        longest_song = json.loads(json_longest)
+        for i in longest_song:
+            print(f"""The average song duration in this album : 
+                    {longest_song[i]['s_title']}, {longest_song[i]['duration']}""")                      
+                           
     except:
         print(album," doesn't exist in the database")
 

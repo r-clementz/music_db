@@ -46,6 +46,33 @@ print(artist_id)
 # album_dict = [dict(found_album) for found_album in found_albums]                      
 # jsonised_albums = json.dumps(album_dict)  
 # all_albums_py = json.loads(jsonised_albums)                    
-# for i in range (len(all_albums_py)):                    
+# for i in range (len(all_albums_py)):  
+"""                
+album = input('Album Title: ')
+album_id = {"id": get_album_id(album)}
+print (album_id['id'])
+row_average= get('''SELECT ROUND (AVG(duration),2) AS avg_of_song_duration
+                                 FROM (SELECT * 
+                                    FROM songs 
+                                    JOIN artistsXsongsXalbums as cross
+                                    ON cross.song_id = songs.id 
+                                    WHERE cross.album_id = :id )''', album_id)
+average_dict =[dict(average) for average in row_average]
+json_average= json.dumps(average_dict)
+average_duration = json.loads(json_average)
+print(f"The average song duration in this album : {average_duration[0]['avg_of_song_duration']}") """
 
-get_average_duration_of_songs()
+album = {"al_title" : input('Album Title: ')}
+album_id = {"id": get_album_id(album['al_title'])}
+row_longest = get ('''SELECT s_title, MAX(duration)
+                          FROM(SELECT * 
+                               FROM songs 
+                               JOIN artistsXsongsXalbums as cross
+                               ON cross.song_id = songs.id
+                               WHERE cross.album_id = :id )''', album_id)
+longest_dict =[dict(song) for song in row_longest]
+json_longest= json.dumps(longest_dict)
+longest_song = json.loads(json_longest)
+
+print(f"The average song duration in this album : {longest_song[0]['s_title']}, {longest_song[0]['MAX(duration)']}")                      
+                        
