@@ -84,22 +84,21 @@ def get_artist_id(artist):#
         to add id to artistsXsongsXalbums cross table.
         Search id by name which user input. 
         :param artist String 
-    '''
-    try: #check if the artist is already in data  
-        row_id = get("SELECT id FROM artists WHERE name LIKE :search_name ", {'search_name': f'{artist}'})
-        id_dict =[dict(row_data) for row_data in row_id ]
-        json_id =json.dumps(id_dict)
-        py_id = json.loads(json_id)
-        artist_id = py_id[0]["id"] 
-        print(f"id for {artist}: {artist_id}")      
+    ''' 
+    row_id = get("SELECT id FROM artists WHERE name LIKE :search_name ", {'search_name': f'{artist}'})
+    id_dict =[dict(row_data) for row_data in row_id ]
+    json_id =json.dumps(id_dict)
+    py_id = json.loads(json_id)
+    artist_id = py_id[0]["id"] 
+    print(f"id for {artist}: {artist_id}")      
       
-        return artist_id
+    return artist_id
    
-    except: # if not, insert the artist to artists table and get id 
-        artist_id = run('INSERT INTO artists (name) VALUES (:name)',{'name':f'{artist}'})
-        print(artist," didn't exist in the database and added as new artist")
-        print(f"id for {artist}: {artist_id}") 
-        return artist_id
+def create_aritst_id(artist):
+    artist_id = run('INSERT INTO artists (name) VALUES (:name)',{'name':f'{artist}'})
+    print(artist," didn't exist in the database and added as new artist")
+    print(f"id for {artist}: {artist_id}") 
+    return artist_id
 
 # Albums 
 def add_album ():#
@@ -119,14 +118,18 @@ def add_album ():#
                         new_album)                        
     print ('The album added to albums table','\nalbum_id: ',album_id )
     #Get artist id 
-    cross_data = {'artist_id': get_artist_id(artist),
+    try: 
+        artist_id = get_artist_id(title)
+    except:
+        artist_id = create_aritst_id(title) 
+
+    cross_data = {'artist_id': artist_id,
                   'album_id' : album_id}       
 
     run('INSERT INTO  artistsXsongsXalbums (artist_id, album_id) VALUES (:artist_id, :album_id)', cross_data)
     print("Album's information added to cross table")
 
 def get_album_id(album):##
-    try:
         row_id = get("SELECT id FROM albums WHERE al_title LIKE :search_name ", {'search_name': f'{album}'})
         id_dict =[dict(row_data) for row_data in row_id ]
         json_id =json.dumps(id_dict)
@@ -135,12 +138,12 @@ def get_album_id(album):##
         print(f"id for {album}: {album_id}")      
         return album_id
 
-    except:
-        print("This album doesn't in the database")
-        album_id = run('INSERT INTO albums (al_title) VALUES (:al_title)',{'al_title':f'{album}'})
-        print("The album was added and the id for this album was also created")
-        print(f"id for {album}: {album_id}")   
-        return album_id
+  
+def create_album_id(album):#            
+    album_id = run('INSERT INTO albums (al_title) VALUES (:al_title)',{'al_title':f'{album}'})
+    print("The album was added and the id for this album was also created")
+    print(f"id for {album}: {album_id}")   
+    return album_id
 
 
 #songs 
@@ -164,10 +167,16 @@ def add_song():#
     for new_song in new_songs:                
          song_id = (run('INSERT INTO songs (s_title, duration) VALUES (?, ?)', (title, converted_duration)))
          song_id_list.append(song_id)
-    
-    artist_id = get_artist_id(artist)  #get artist id 
-    album_id = get_album_id(album)   #get album_id
- 
+    #get artist id 
+    try:
+        artist_id = get_artist_id(artist)
+    except:
+        artist_id = create_aritst_id(artist) 
+    #get album_id
+    try:
+        album_id = get_album_id(album)
+    except:       
+        album_id = create_album_id(album)
     #Add and update cross table data  
     cross_data=[]    
     for song_id in song_id_list:
@@ -184,7 +193,25 @@ def add_song():#
               'album_id:', cross_id['album_id'], 
               'song_id :', cross_id['song_id'], 
               'added to artistsXsongsXalbums')
-    print('All new songs added to cross table')    
+    print('All new songs added to cross table')  
+
+
+def get_song_id(song):##
+        row_id = get("SELECT id FROM songs WHERE s_title LIKE :search_name ", {'search_name': f'{song}'})
+        id_dict =[dict(row_data) for row_data in row_id ]
+        json_id =json.dumps(id_dict)
+        py_id = json.loads(json_id)
+        song_id = py_id[0]["id"]
+        print(f"id for {song}: {song_id}")      
+        return song_id
+
+  
+def create_album_id(song):#            
+    song_id = run('INSERT INTO songs (s_title) VALUES (:s_title)',{'s_title':f'{song}'})
+    print("The song was added and the id for this album was also created")
+    print(f"id for {song}: {song_id}")   
+    return song_id
+
     
 def print_all_artists():#
     '''
@@ -243,39 +270,48 @@ def update_released_year():#
     except: 
         print(":( We got an error and couldn't change released year")        
 
-def delete_artist():
+def delete_artist():#
     '''
         Delete an artist from database
     '''    
     try:
         deleting_artist = {'name': input("Artist you'd like to delete :")}
         
-        run('''DELETE FROM artists WHERE name LIKE :name ''', deleting_artist)
+        run("DELETE FROM artists WHERE name LIKE :name ", deleting_artist)
         print(delete_artist['name']," was deleted.")
     except:
         print(deleting_artist['name']," doesn't exist in the database")   
 
-def delete_album():
+def delete_album():#
     '''
         Delete an album from database
     '''
     try:
-        deliting_album = input()
-        run('''DELETE FROM albums WHERE name LIKE '%:al_title%' ''', {'al_title': f'%{deliting_album}%'})
-        print(deliting_album," was deleted.")
+        deliting_album = { 'al_title' : input("Album you'd like to delete: ")}
+        al_id = {"id":get_album_id(deliting_album['al_title'])}
+        #Delete album from albums table 
+        run("DELETE FROM albums WHERE al_title LIKE :al_title ", deliting_album)
+        print(deliting_album['al_title']," was deleted from albums")
+        #Delete album_id from cross table 
+        run("DELETE FROM artistsXsongsXalbums WHERE album_id = :id", al_id)
+        print("The album was also deleted from artistsXsongsXalbums")
+     
     except:
-         print(deliting_album," doesn't exist in the database")    
+         print(deliting_album["al_title"]," doesn't exist in the database")    
 
-def delete_song():
+def delete_song():#
     '''
         Delete a song from database
     '''
     try:
-        deliting_song = input()
-        run('''DELETE FROM albums WHERE name LIKE '%:s_title%' ''', {'s_title': f'%{deliting_song}%'})
-        print(deliting_song," was deleted.")
+        deliting_song = {'s_title': input("Song you'd like to delete:")}
+        s_id = {'id' : get_song_id(deliting_song['s_title'])}
+        run("DELETE FROM songs WHERE s_title LIKE :s_title ", deliting_song)
+        print(deliting_song['s_title']," was deleted from songs")
+        run("DELETE FROM artistsXsongsXalbums WHERE song_id = :id" , s_id)
+        print ("The song was also deleted from artistsXsongsXalbums")
     except:
-         print(deliting_song," doesn't exist in the database")    
+         print(deliting_song['s_title']," doesn't exist in the database")    
 
     
 def get_average_duration_of_songs():

@@ -47,5 +47,5 @@ print(artist_id)
 # jsonised_albums = json.dumps(album_dict)  
 # all_albums_py = json.loads(jsonised_albums)                    
 # for i in range (len(all_albums_py)):                    
-#             print(all_albums_py[i]['al_title'])
-delete_artist()
+
+get_average_duration_of_songs()
