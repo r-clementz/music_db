@@ -31,4 +31,21 @@ py_id = json.loads(json_id)
 artist_id = py_id[0]["id"]      
 print(artist_id)
 '''
-add_album()
+
+'''INSERT INTO artistsXsongsXalbums
+ VALUES ((SELECT id FROM artists WHERE name LIKE '%TEST%'), 2,3)'''
+# artist_id = int(input('Artist_id:'))
+# found_albums = get('''SELECT al_title
+#                               FROM albums
+#                               JOIN artistsXsongsXalbums as cross
+#                               ON cross.album_id = albums.id
+#                               WHERE cross.artist_id = :artist_id
+#                               GROUP BY al_title''',
+#                               {'artist_id':artist_id})
+                              
+# album_dict = [dict(found_album) for found_album in found_albums]                      
+# jsonised_albums = json.dumps(album_dict)  
+# all_albums_py = json.loads(jsonised_albums)                    
+# for i in range (len(all_albums_py)):                    
+#             print(all_albums_py[i]['al_title'])
+delete_artist()
