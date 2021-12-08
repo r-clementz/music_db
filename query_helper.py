@@ -211,14 +211,22 @@ def add_song():#
               'added to artistsXsongsXalbums')
     print('All new songs added to cross table')  
 
-
+#ID 
 def get_song_id(song):##
-        row_id = get("SELECT id FROM songs WHERE s_title LIKE :search_name ", {'search_name': f'{song}'})
+        row_id = get("SELECT id, s_title FROM songs WHERE s_title LIKE :search_name ", {'search_name': f'%{song}%'})
         id_dict =[dict(row_data) for row_data in row_id ]
         json_id =json.dumps(id_dict)
+        print(json_id) 
         py_id = json.loads(json_id)
-        song_id = py_id[0]["id"]
-        print(f"id for {song}: {song_id}")      
+
+        if len(py_id) > 1: 
+            print("[id] / [Song title]")
+            for i in range(len(py_id)):
+                print(f"{py_id[i]['id']}\t{py_id[i]['s_title']}")
+            song_id = int(input("Please choose id for relevant song"))    
+        else:       
+            song_id= py_id[0]["id"] 
+        
         return song_id
 
   
@@ -319,10 +327,10 @@ def delete_song():#
         Delete a song from database
     '''
     try:
-        deliting_song = {'s_title': input("Song you'd like to delete:")}
-        s_id = {'id' : get_song_id(deliting_song['s_title'])}
-        run("DELETE FROM songs WHERE s_title LIKE :s_title ", deliting_song)
-        print(deliting_song['s_title']," was deleted from songs")
+        deliting_song =  input("Song you'd like to delete:")
+        s_id = get_song_id(deliting_song)
+        run("DELETE FROM songs WHERE s_title LIKE :s_title ", {'s_title': f"%{deliting_song}%" })
+        print(deliting_song," was deleted from songs")
         run("DELETE FROM artistsXsongsXalbums WHERE song_id = :id" , s_id)
         print ("The song was also deleted from artistsXsongsXalbums")
     except:
@@ -571,8 +579,10 @@ def get_nr_of_songs_and_total_durations():#
         info_dict =[dict(info) for info in row_info]    
         jsonised_info = json.dumps(info_dict)
         found_info = json.loads(jsonised_info)  
-        if found_info[0]['al_title'] == None  or found_info[i]['COUNT(song_id)'] ==0:
+        #If there's album but no information
+        if found_info[0]['al_title'] == None  or found_info[0]['COUNT(song_id)'] ==0:
             print ("Couldnt't find any info of ",search_name) 
+        
         print('Search Result:\n Album / Number of songs / duration (seconds)')             
         for i in range(len(found_info)):
              print(f"{found_info[i]['al_title']}\t{found_info[i]['COUNT(song_id)']}\t({found_info[i]['SUM(duration)']})")
@@ -580,4 +590,4 @@ def get_nr_of_songs_and_total_durations():#
           print("Couldnt't find ",search_name) 
 
 
-#Gör så att alla listor går att sortera på olika egenskaper, som name, year_released eller duration 
+
