@@ -27,10 +27,3 @@ def get(query,values = {}):
     conn.close()
     return results 
 
-def get_id(query,value): 
-    conn = sqlite3.connect(db_name)
-    cur = conn.cursor()
-    result = cur.execute(query,value) 
-    conn.commit()
-    conn.close()
-    return result.lastrowid 

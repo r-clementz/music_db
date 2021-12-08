@@ -1,9 +1,5 @@
-from query_helper import *
-from db_flow_helper import *
-from add_queries import *
-from get_data_queries import *
-from delete_data_queries import *
-
+from query_helpers.db_flow_helper import *
+# db_flow_helper,add_queries,get_data_queries,delete_data_queries import *
 
 print("-------MUSIC DATABASE-------")
 main_menu = ("1) SEARCH 2) SEE DATA 3) ADD DATA 4) DELETE DATA 5) FUN FACT ")

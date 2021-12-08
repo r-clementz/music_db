@@ -58,15 +58,7 @@ for song in songs:
 """ for data in cross_table:
  run('INSERT INTO artistsXsongsXalbums VALUES (:artist_id, :album_id, :song_id )',cross_table) """
 
-
-
-
-#QUERIES
-#Adding Artist 
-
-
         
-
 def get_artist_id(artist):#
     '''
         Help function to get id from artists table

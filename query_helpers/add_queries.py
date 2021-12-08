@@ -1,6 +1,7 @@
 from database import*
 from query_helper import *
 
+
 def add_artist():#
     name = input('Artist Name:')
     description = input ('Artist Description: ')
