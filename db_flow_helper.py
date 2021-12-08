@@ -1,4 +1,8 @@
 from query_helper import *
+from search_queries import *
+from add_queries import *
+from get_data_queries import *
+from delete_data_queries import *
 
 #UPDATE FUNCTIONS
 def update_database():
@@ -47,7 +51,7 @@ def artist_search():
     if search_result is True:
         further_choice= int(input('Check the album(s) for this artist?\n 1. Yes 2.No'))
         if further_choice == 1:
-            all_albums_of_artist()
+            all_albums_of_artist(search_name)
             
             fur_more_choice = int(input('1.Check more detail 2.Exit'))
             if fur_more_choice == 1:

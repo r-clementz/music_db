@@ -1,9 +1,34 @@
-import curses
-from os import times
-from database import run,get,run_many,get_id
-from music_data import artists, albums, songs,cross_table
 from query_helper import *
-from curses import wrapper
-title = "MUSIC DATABASE" 
-main_menu = 'Search'
-print_all_songs()
+from db_flow_helper import *
+from add_queries import *
+from get_data_queries import *
+from delete_data_queries import *
+
+
+print("-------MUSIC DATABASE-------")
+main_menu = ("1) SEARCH 2) SEE DATA 3) ADD DATA 4) DELETE DATA 5) FUN FACT ")
+second_menu = ("1) MAIN MENU 2) EXIT")
+stay = True
+
+
+while stay is True:
+
+    first_choice = int(input(f"{main_menu}"))
+    if first_choice == 1:
+        seach_in_db()    
+    elif first_choice == 2:
+        show_data()   
+    elif first_choice == 3: 
+        update_database()   
+    elif first_choice == 4:
+        delete_data()
+    elif first_choice == 5:
+        fun_fact()
+    else:
+        print('wrong input')  
+
+    second_choice = int(input(f"{second_menu}"))
+    if second_choice ==2:
+        stay = False 
+                     
+
