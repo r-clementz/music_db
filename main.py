@@ -62,17 +62,16 @@ json_average= json.dumps(average_dict)
 average_duration = json.loads(json_average)
 print(f"The average song duration in this album : {average_duration[0]['avg_of_song_duration']}") """
 
-album = {"al_title" : input('Album Title: ')}
-album_id = {"id": get_album_id(album['al_title'])}
-row_longest = get ('''SELECT s_title, MAX(duration)
-                          FROM(SELECT * 
-                               FROM songs 
-                               JOIN artistsXsongsXalbums as cross
-                               ON cross.song_id = songs.id
-                               WHERE cross.album_id = :id )''', album_id)
-longest_dict =[dict(song) for song in row_longest]
-json_longest= json.dumps(longest_dict)
-longest_song = json.loads(json_longest)
-
-print(f"The average song duration in this album : {longest_song[0]['s_title']}, {longest_song[0]['MAX(duration)']}")                      
-                        
+# json_longest= json.dump(number_dict)
+# number_of_songs = json.loads(json_longest)                          
+# print(f"{number_of_songs['COUNT(a
+# search_name =  input('Name or Keyword to search an artist: ')
+# print({'name':f'%{search_name}%'})
+# row_found_artist = get('SELECT name FROM artists WHERE name LIKE :name',{'name':f'%{search_name}%' })
+# artist_dict = [dict(artist) for artist in row_found_artist]
+# json_artist = json.dumps(artist_dict)
+# print(json_artist)
+# found_artist = json.loads(json_artist)
+# for i in range(len(found_artist)):
+#     print(found_artist[i]['name'])
+search_song()

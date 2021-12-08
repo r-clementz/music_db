@@ -90,7 +90,7 @@ def get_artist_id(artist):#
     json_id =json.dumps(id_dict)
     py_id = json.loads(json_id)
     artist_id = py_id[0]["id"] 
-    print(f"id for {artist}: {artist_id}")      
+    #print(f"id for {artist}: {artist_id}")      
       
     return artist_id
    
@@ -98,7 +98,7 @@ def create_aritst_id(artist):
     artist_id = run('INSERT INTO artists (name) VALUES (:name)',{'name':f'{artist}'})
     print(artist," didn't exist in the database and added as new artist")
     print(f"id for {artist}: {artist_id}") 
-    return artist_id
+    #return artist_id
 
 # Albums 
 def add_album ():#
@@ -135,14 +135,14 @@ def get_album_id(album):##
         json_id =json.dumps(id_dict)
         py_id = json.loads(json_id)
         album_id = py_id[0]["id"]
-        print(f"id for {album}: {album_id}")      
+        #print(f"id for {album}: {album_id}")      
         return album_id
 
   
 def create_album_id(album):#            
     album_id = run('INSERT INTO albums (al_title) VALUES (:al_title)',{'al_title':f'{album}'})
     print("The album was added and the id for this album was also created")
-    print(f"id for {album}: {album_id}")   
+   #print(f"id for {album}: {album_id}")   
     return album_id
 
 
@@ -326,7 +326,7 @@ def get_average_duration_of_songs():#
 #Average duration of each album
 ##get album name and id to check the duration
 
-def get_average_song_duration_in_album():
+def get_average_song_duration_in_album():#
     '''
         Get and print the average duration of songs
         in an album chosen by user  
@@ -348,14 +348,14 @@ def get_average_song_duration_in_album():
     except:  
          print("Couldn't get any data.")                
 
-def get_longest_song_in_album():
+def get_longest_song_in_album():#
     '''
         Get and print the longest song in an album
         chosesen by user
     '''
     try:
         album = {"al_title" : input('Album Title: ')}
-        album_id = {"id": get_album_id(album)}
+        album_id = {"id": get_album_id(album['al_title'])}
         row_longest = get ('''SELECT s_title, MAX(duration)
                           FROM(SELECT * 
                                FROM songs 
@@ -365,57 +365,68 @@ def get_longest_song_in_album():
         longest_dict =[dict(song) for song in row_longest]
         json_longest= json.dumps(longest_dict)
         longest_song = json.loads(json_longest)
-        for i in longest_song:
-            print(f"""The average song duration in this album : 
-                    {longest_song[i]['s_title']}, {longest_song[i]['duration']}""")                      
-                           
+        print(f"The average song duration in this album : {longest_song[0]['s_title']}, {longest_song[0]['MAX(duration)']}")                      
+                        
     except:
         print(album," doesn't exist in the database")
 
-def get_number_of_songs_in_albums():
+def get_number_of_songs_in_albums():#
     '''
         Get then number of songs in albums user chose.
     '''
     try:
-        album = input('Album Title: ')
-        album_id = get_album_id(album)
-        number_of_songs =('''SELECT COUNT(album_id)
+        album = {"al_title" : input('Album Title: ')}
+        album_id = { "id": get_album_id(album['al_title'])}
+        row_number =get('''SELECT COUNT(album_id)
                              FROM(SELECT * 
                                   FROM songs 
                                   JOIN artistsXsongsXalbums as cross
                                   ON cross.song_id = songs.id 
-                                  WHERE cross.album_id = :album_id)''',
-                            {'album_id':f'%{album_id}%'})
-        print(number_of_songs)
+                                  WHERE cross.album_id = :id)''',album_id)
+        number_dict =[dict(row) for row in row_number]
+        json_number = json.dumps(number_dict)
+        number_of_songs = json.loads(json_number)                          
+        print(f"{number_of_songs[0]['COUNT(album_id)']} songs in the album")
     except:
         print(album," doesn't exist in the database")
 
 
 
-def search_artist():
+def search_artist():#
     '''
         Search an aritst in database by artist name 
         and print the result.
     '''
-    search_name = input('Name or Keyword to search an artist: ')
+    search_name =  input('Name or Keyword to search an artist: ')
     try:
-        found_artist = get('SELECT name FROM artist WHERE name LIKE :search_name', {'name':f'%{search_name}%'})
-        print(found_artist)
+        row_found_artist = get('SELECT id, name FROM artists WHERE name LIKE :name',{'name':f'%{search_name}%' })
+        artist_dict = [dict(artist) for artist in row_found_artist]
+        json_artist = json.dumps(artist_dict)
+        found_artist = json.loads(json_artist)
+        print('Search Result:\n (id) / name')
+        for i in range(len(found_artist)):
+            print(f"({found_artist[i]['id']})  {found_artist[i]['name']}")
     except:
         print ("Couldn't find any artist with ", search_name)    
 
     
-def search_song():
+def search_song():#
     '''
         Search a song by name or key word 
         and print the result.
     '''
     search_name = input('Name or Keyword to search a song: ')
     try:
-        found_song = get('SELECT name FROM artist WHERE name LIKE :search_name', {'name':f'%{search_name}%'})
-        print(found_song)
+        row_found_songs = get('SELECT id, s_title FROM songs WHERE s_title LIKE :s_title',{'s_title':f'%{search_name}%' })
+        song_dict = [dict(song) for song in row_found_songs]
+        json_song = json.dumps(song_dict)
+        found_song = json.loads(json_song)
+        print('Search Result:\n (id) / name')
+        for i in range(len(found_song)):
+            print(f"({found_song[i]['id']})  {found_song[i]['s_title']}")
+
     except:
-        print ("Couldn't find any artist with ", search_name)    
+        print ("Couldn't find any song like ", search_name)    
 
     
 def all_albums_of_artist():#
