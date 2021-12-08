@@ -1,16 +1,22 @@
 from database import*
 from query_helper import *
+import json
+
+'''
+This file contains functions of queries to search some data in music_db
+'''
 
 
-
-def search_artist(search_name):#
+def search_artist(artist):
     '''
         Search an aritst in database by artist name 
-        and print the result.
+        and show the list of results similar to seach name.
+        :praram artist String 
+        :return if the artist is successfully found returns True if not returns False. 
     '''
     #search_name =  input('Name or Keyword to search an artist: ')
     try:
-        row_found_artist = get('SELECT id, name FROM artists WHERE name LIKE :name',{'name':f'%{search_name}%' })
+        row_found_artist = get('SELECT id, name FROM artists WHERE name LIKE :name',{'name':f'%{artist}%' })
         artist_dict = [dict(artist) for artist in row_found_artist]
         json_artist = json.dumps(artist_dict)
         found_artist = json.loads(json_artist)
@@ -19,13 +25,16 @@ def search_artist(search_name):#
             print(f"({found_artist[i]['id']})  {found_artist[i]['name']}")
         return True     
     except:
-        print ("Couldn't find any artist with ", search_name)    
+        print ("Couldn't find any artist with ", artist)    
         return False 
     
 def search_song(song):#
     '''
         Search a song by name or key word 
-        and print the result.
+        and print song id title similar to search word. 
+        :praram song String 
+        :return if the song is successfully found returns True if not returns False. 
+
     '''
     try:
         row_found_songs = get('SELECT id, s_title FROM songs WHERE s_title LIKE :s_title',{'s_title':f'%{song}%' })
@@ -43,8 +52,10 @@ def search_song(song):#
 
 def search_song_w_artist(song):
     '''
-        Search a song by title or key word.
-        The reult will be shown together with the artist name. 
+        Search a song by title or key word and print song id,
+        tile and aritst name for the song  similar to search word.
+        :praram song(song title) String 
+        :return if the song is successfully found returns True if not returns False. 
     '''
     #'Name or Keyword to search a song
     try:
@@ -67,6 +78,12 @@ def search_song_w_artist(song):
         print ("Couldn't find any song like ", song)   
 
 def search_album(album):
+    '''
+        Search an album by title or key word and print id & tile. 
+        :praram album(album title) String 
+        :return if the song is successfully found returns True if not returns False. 
+    '''
+
     try:
         row_found_album = get('SELECT id, al_title FROM albums WHERE al_title LIKE :al_title',{'s_title':f'%{album}%' })
         album_dict = [dict(song) for song in row_found_album]
