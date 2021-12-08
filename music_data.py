@@ -1,4 +1,7 @@
-import json
+'''
+This file contains all collections of orgiinal data 
+for artists, albums and songs to send forward to the database music_db.db
+'''
 #Aritsts data: artists
 artists =[
 {'name': 'Robert Glasper',
