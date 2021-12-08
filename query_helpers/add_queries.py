@@ -1,8 +1,14 @@
 from database import*
 from query_helper import *
+import json
 
 
 def add_artist():#
+    '''
+        Add a new artist by inputting aritst name and description.
+        artist id is automatically created in SQLite. 
+        id for cross table is also created by inner function. 
+    '''
     name = input('Artist Name:')
     description = input ('Artist Description: ')
     artist_id = (run('INSERT INTO artists VALUES (NULL, ?, ?)',(name, description)))
@@ -16,6 +22,11 @@ def add_artist():#
     print ('artist_id was created in cross table')
 
 def add_album ():#
+    '''
+        Add a new album by inputting title, description,
+        released year and genre. 
+        Artist name is also given to create data for cross table.
+    '''
     artist = input('Artist : ')
     title = input('Album Title:')
     description = input('Album Description:')
@@ -44,6 +55,11 @@ def add_album ():#
     print("Album's information added to cross table")
 
 def add_song():#
+    '''
+        Add songs as many as user wanted if these are from the same album.
+        Artist name and album title are also given and all id are created 
+        for cross table.
+    '''
     artist = input('Artist : ')
     album = input ('Album Title: ')
     number_of_new_songs = int(input ("How many songs you'd like to add? :"))
@@ -94,8 +110,8 @@ def add_song():#
 
 def update_released_year():#
     '''
-        Uppdate year_released with the year user input
-        if it is null.
+        Get album names without released year. 
+        User choose an album and add it.
     '''                                        
 #get albums with no released year
     try:
