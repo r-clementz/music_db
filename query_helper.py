@@ -85,13 +85,20 @@ def get_artist_id(artist):#
         Search id by name which user input. 
         :param artist String 
     ''' 
-    row_id = get("SELECT id FROM artists WHERE name LIKE :search_name ", {'search_name': f'{artist}'})
+    row_id = get("SELECT id, name FROM artists WHERE name LIKE :search_name ", {'search_name': f'%{artist}%'})
     id_dict =[dict(row_data) for row_data in row_id ]
     json_id =json.dumps(id_dict)
     py_id = json.loads(json_id)
-    artist_id = py_id[0]["id"] 
-    #print(f"id for {artist}: {artist_id}")      
-      
+
+    if len(py_id) > 1: 
+        print("[id] / [Aritst name]")
+        for i in range(len(py_id)):
+            print(f"{py_id[i]['id']}\t{py_id[i]['name']}")
+        artist_id = int(input("Please choose id for relevant artist"))    
+
+    else:       
+        artist_id = py_id[0]["id"]  
+    
     return artist_id
    
 def create_aritst_id(artist):
@@ -130,12 +137,21 @@ def add_album ():#
     print("Album's information added to cross table")
 
 def get_album_id(album):##
-        row_id = get("SELECT id FROM albums WHERE al_title LIKE :search_name ", {'search_name': f'{album}'})
+        row_id = get("SELECT id, al_title FROM albums WHERE al_title LIKE :search_name ", {'search_name': f'%{album}%'})
         id_dict =[dict(row_data) for row_data in row_id ]
         json_id =json.dumps(id_dict)
         py_id = json.loads(json_id)
-        album_id = py_id[0]["id"]
-        #print(f"id for {album}: {album_id}")      
+        
+        if len(py_id) > 1: 
+            print("[id] / [Album title]")
+            for i in range(len(py_id)):
+                print(f"{py_id[i]['id']}\t{py_id[i]['al_title']}")
+            album_id = int(input("Please choose id for relevant album"))    
+
+        else:       
+            album_id= py_id[0]["id"] 
+          
+  
         return album_id
 
   
@@ -421,13 +437,38 @@ def search_song():#
         song_dict = [dict(song) for song in row_found_songs]
         json_song = json.dumps(song_dict)
         found_song = json.loads(json_song)
-        print('Search Result:\n (id) / name')
+       
+        print('Search Result:\n (id) / title')
         for i in range(len(found_song)):
             print(f"({found_song[i]['id']})  {found_song[i]['s_title']}")
 
     except:
         print ("Couldn't find any song like ", search_name)    
 
+def search_song_w_artist():
+    '''
+        Search a song by title or key word.
+        The reult will be shown together with the artist name. 
+    '''
+    search_name = input('Name or Keyword to search a song: ')
+    try:
+        row_found_songs = get('''SELECT songs.id, s_title, artists.name
+                                 FROM songs, artists
+                                 JOIN artistsXsongsXalbums as cross
+                                 ON artists.id = cross.artist_id 
+                                 AND songs.id = song_id
+                                 WHERE songs.s_title LIKE  :s_title''',
+                                 {'s_title':f'%{search_name}%' })                         
+        song_dict = [dict(song) for song in row_found_songs]
+        json_song = json.dumps(song_dict)
+        found_song = json.loads(json_song)
+       
+        print('Search Result:\n [id] / [title] /[artist]')
+        for i in range(len(found_song)):
+            print(f"({found_song[i]['id']})\t{found_song[i]['s_title']}\t/ {found_song[i]['name']}")
+
+    except:
+        print ("Couldn't find any song like ", search_name)    
     
 def all_albums_of_artist():#
     '''
@@ -437,7 +478,7 @@ def all_albums_of_artist():#
     artist_id = get_artist_id(search_name) 
   
     try: 
-        found_albums = get('''SELECT al_title
+        found_albums = get('''SELECT id, al_title
                               FROM albums
                               JOIN artistsXsongsXalbums as cross
                               ON cross.album_id = albums.id
@@ -448,12 +489,14 @@ def all_albums_of_artist():#
         album_dict = [dict(found_album) for found_album in found_albums]                      
         jsonised_albums = json.dumps(album_dict)  
         all_albums_py = json.loads(jsonised_albums)
+        
+        print('Search Result:\n (id) / title')
         for i in range (len(all_albums_py)):                    
-            print(all_albums_py[i]['al_title'])
+            print(f"{all_albums_py[i]['id']}  {all_albums_py[i]['al_title']}")
     except:
         print(":( Couldnt't find any album info of ",search_name)                              
 
-def get_album_details():
+def get_album_list_w_details():#
     '''
         Get and print the album details and albums 
         of the artist which user chosen
@@ -462,49 +505,59 @@ def get_album_details():
     artist_id = get_artist_id(search_name) 
    
     try: 
-        found_albums = get('''SELECT al_title, al_description, name
-                              FROM albums, artists 
+        row_info = get('''SELECT id, al_title, al_description
+                              FROM albums
                               JOIN artistsXsongsXalbums as cross
                               ON cross.album_id = albums.id
                               WHERE cross.artist_id = :artist_id
                               GROUP BY al_title''',
-                              {'artist_id':f'%{artist_id}%'})
-        print(found_albums)
+                              {'artist_id':artist_id})
+        album_dict =[dict(info) for info in row_info]    
+        jsonised_info = json.dumps(album_dict)
+        found_albums = json.loads(jsonised_info)  
+        print('Search Result:\n (id) / title / info')             
+        for i in range(len(found_albums)):
+            print(f"{found_albums[i]['id']}  {found_albums[i]['al_title']} : {found_albums[i]['al_description']}")
+            
     except:
         print("Couldnt't find any info of ",search_name)         
 
-def get_all_songs_in_albums_w_details():
+def get_all_songs_in_albums_w_details():#
     '''
         Get and print all songs in the album of the artist 
         which user chosen. Album details also shown.
     '''
     search_name = input("Artist you'd like to see all albums: ")
     try: 
-        found_songs_and_al_details = get('''SELECT s_title,al_title,al_description
+        row_info = get('''SELECT songs.id, s_title , al_title, al_description
                                             FROM songs,albums
                                             JOIN artistsXsongsXalbums AS cross
                                             ON cross.album_id = albums.id 
                                             AND cross.song_id = songs.id
-                                            WHERE cross.artist_id = (SELECT artist_id 
+                                            WHERE cross.artist_id = (SELECT artists.id 
                                                                      FROM  artistsXsongsXalbums
                                                                      JOIN artists
                                                                      ON cross.artist_id = artists.id  
-                                                                     WHERE artists.name LIKE ?''',
+                                                                     WHERE artists.name LIKE :name)''',
                                             {'name':f'%{search_name}%'} )
-        print(found_songs_and_al_details) 
+        album_dict =[dict(info) for info in row_info]    
+        jsonised_info = json.dumps(album_dict)
+        found_albums = json.loads(jsonised_info)  
+        print('Search Result:\n id / song \t/ album / info')             
+        for i in range(len(found_albums)):
+             print(f"{found_albums[i]['id']}\t{found_albums[i]['s_title']}\t{found_albums[i]['al_title']}: {found_albums[i]['al_description']}")
+                                                                    
     except:
         print("Couldnt't find any info of ",search_name)                                                               
 
-def get_nr_of_songs_and_total_durations():
+def get_nr_of_songs_and_total_durations():#
     '''
         Get and print the list of total number of songs 
         in the album and total playing time 
     '''
     search_name = input("Album you'd like to see all songs and duration: ")
     try: 
-        total_songs_duration = get('''SELECT al_title, 
-                                      COUNT(song_id) AS total_songs,
-                                      SUM(duration) AS total_length
+        row_info = get('''SELECT al_title, COUNT(song_id),SUM(duration) 
                                       FROM songs, albums
                                       JOIN artistsXsongsXalbums as cross
                                       ON song_id = songs.id
@@ -512,8 +565,17 @@ def get_nr_of_songs_and_total_durations():
                                       AND cross.song_id = songs.id
                                       AND cross.album_id = (SELECT id 
                                                             FROM albums 
-                                                            WHERE albums.al_title LIKE ?) ''',
+                                                            WHERE albums.al_title LIKE :al_title ) ''',
                                       {'al_title':f'%{search_name}%'})
+
+        info_dict =[dict(info) for info in row_info]    
+        jsonised_info = json.dumps(info_dict)
+        found_info = json.loads(jsonised_info)  
+        if found_info[0]['al_title'] == None  or found_info[i]['COUNT(song_id)'] ==0:
+            print ("Couldnt't find any info of ",search_name) 
+        print('Search Result:\n Album / Number of songs / duration (seconds)')             
+        for i in range(len(found_info)):
+             print(f"{found_info[i]['al_title']}\t{found_info[i]['COUNT(song_id)']}\t({found_info[i]['SUM(duration)']})")
     except:                                                     
           print("Couldnt't find ",search_name) 
 

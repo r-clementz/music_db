@@ -73,5 +73,24 @@ print(f"The average song duration in this album : {average_duration[0]['avg_of_s
 # print(json_artist)
 # found_artist = json.loads(json_artist)
 # for i in range(len(found_artist)):
-#     print(found_artist[i]['name'])
-search_song()
+#get_nr_of_songs_and_total_durations()
+search_name = input("Album you'd like to see all songs and duration: ")
+  
+row_info = get('''SELECT al_title,COUNT(song_id), SUM(duration) 
+                                      FROM songs, albums
+                                      JOIN artistsXsongsXalbums as cross
+                                      ON song_id = songs.id
+                                      WHERE cross.album_id = albums.id 
+                                      AND cross.song_id = songs.id
+                                      AND cross.album_id = (SELECT id 
+                                                            FROM albums 
+                                                            WHERE albums.al_title LIKE :al_title)''',
+                                      {'al_title':f'%{search_name}%'})
+
+info_dict =[dict(info) for info in row_info]    
+jsonised_info = json.dumps(info_dict)
+print(jsonised_info)
+found_info = json.loads(jsonised_info)  
+print('Search Result:\n Album / Number of songs / duration (seconds)')             
+for i in range(len(found_info)):
+    print(f"{found_info[i]['al_title']}\t{found_info[i]['COUNT(song_id)']}\t({found_info[i]['SUM(duration)']})")
